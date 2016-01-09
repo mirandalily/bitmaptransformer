@@ -26,6 +26,6 @@ ee.on('transformed', function() {
     if (err) {
       throw err;
     }
-    console.log('file saved as ' + newFile.slice(6));
+    console.log('file saved as ' + newFile.slice(6)); //eslint-disable-line
   });
 });

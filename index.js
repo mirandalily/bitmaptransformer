@@ -12,8 +12,9 @@ var result;
 // console.log(`height: ${bitmap.readUInt32LE(22)}`);
 // console.log(`number of colors: ${bitmap.readUInt32LE(46)}`)
 // console.log(bitmap);
+var file = process.argv[2];
 
-fs.readFile(process.argv[2], function(err, data) {
+fs.readFile(file, function(err, data) {
   transform(data, function(err, data) {
     result = data;
     ee.emit('transformed');
@@ -21,7 +22,7 @@ fs.readFile(process.argv[2], function(err, data) {
 });
 
 ee.on('transformed', function() {
-  var newFile = 'img/palette-bitmap-invert.bmp';
+  var newFile = '' + file + '-invert.bmp';
   fs.writeFile(newFile, result, function(err) {
     if (err) {
       throw err;

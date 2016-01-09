@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var ee = new EventEmitter();
 
 var result;
-var bitmap = fs.readFileSync(process.argv[2]);
+// var data = fs.readFileSync(process.argv[2]);
 // console.log(`type: ${bitmap.toString('utf8', 0, 2)}`);
 // console.log(`size: ${bitmap.readUInt32LE(2)}`);
 // console.log(`start of pixel data: ${bitmap.readUInt32LE(10)}`);
@@ -14,13 +14,11 @@ var bitmap = fs.readFileSync(process.argv[2]);
 // console.log(bitmap);
 
 fs.readFile(process.argv[2], function(err, data) {
-  transform(bitmap, function(err, data) {
-    console.log('transforming!');
+  transform(data, function(err, data) {
     result = data;
-    console.log(result);
     ee.emit('transformed');
   });
-})
+});
 
 ee.on('transformed', function() {
   var newFile = 'img/palette-bitmap-invert.bmp';

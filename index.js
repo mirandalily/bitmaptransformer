@@ -1,32 +1,27 @@
 const fs = require('fs');
-var transform = require('./lib/invert');
-var EventEmitter = require('events').EventEmitter;
-var ee = new EventEmitter();
-
+var transforms = require('./lib/transforms');
 var result;
-// var data = fs.readFileSync(process.argv[2]);
-// console.log(`type: ${bitmap.toString('utf8', 0, 2)}`);
-// console.log(`size: ${bitmap.readUInt32LE(2)}`);
-// console.log(`start of pixel data: ${bitmap.readUInt32LE(10)}`);
-// console.log(`width: ${bitmap.readUInt32LE(18)}`);
-// console.log(`height: ${bitmap.readUInt32LE(22)}`);
-// console.log(`number of colors: ${bitmap.readUInt32LE(46)}`)
-// console.log(bitmap);
+
 var file = process.argv[2];
+var transformType = process.argv[3];
 
-fs.readFile(file, function(err, data) {
-  transform(data, function(err, data) {
-    result = data;
-    ee.emit('transformed');
-  });
-});
-
-ee.on('transformed', function() {
-  var newFile = '' + file + '-invert.bmp';
+function write() {
+  var newFile = '' + file + '-' + transformType + '.bmp';
   fs.writeFile(newFile, result, function(err) {
     if (err) {
       throw err;
     }
-    console.log('file saved as ' + newFile.slice(6)); //eslint-disable-line
+    console.log('file saved as ' + newFile.slice(4)); //eslint-disable-line
   });
-});
+}
+
+if(transformType === 'invert' || transformType === 'grayscale') {
+  fs.readFile(file, function(err, data) {
+    transforms[transformType](data, function(err, data) {
+      result = data;
+      write();
+    });
+  });
+} else {
+  console.log('Please input a valid transform type.'); //eslint-disable-line
+}
